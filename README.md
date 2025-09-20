@@ -50,5 +50,5 @@ GitHub Repository: https://github.com/Rohith-reddy-7/Resume-checker
 
 Deployed Web App: [https://resume-checker-8zlv9scgnsohrwsqkammpr.streamlit.app/]
 
-Demo Video: [YouTube Link]
+Demo Video: [[YouTube Link]--(https://www.youtube.com/watch?v=Vn_hfGyYlc0)]
 
