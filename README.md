@@ -1,1 +1,7 @@
 # Resume-checker
+
+During this hackathon, I developed an Automated Resume Relevance Check System that evaluates how well a candidate’s resume matches a job description. The main idea was to create a tool that not only checks for keyword matches but also understands the resume content intelligently using modern AI techniques. I implemented two scoring modes: a simple keyword-based match for a quick and lightweight evaluation, and an LLM-powered mode using OpenAI’s GPT models to provide a smarter, structured assessment of skills, education, experience, and overall relevance.
+
+The project focuses on making the evaluation process fast, accurate, and easy to use. Users can upload resumes in PDF, DOCX, or TXT format, paste a job description, and immediately see a relevance score along with matched skills and suggestions to improve the resume. For the LLM mode, I carefully designed prompts to extract structured information and reasoning from the model, so the output is clear, understandable, and actionable.
+
+Overall, this project reflects my thinking about practical AI applications: combining classical methods like keyword matching with modern generative AI to solve real-world problems efficiently. It helped me strengthen my problem-solving mindset, my skills in Streamlit deployment, text extraction, and LLM integration, and it gave me hands-on experience creating a tool that could realistically be used in hiring processes.
