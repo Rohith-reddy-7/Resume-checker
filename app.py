@@ -1,6 +1,6 @@
 # app.py
 import streamlit as st
-import io, os, re, json
+import io, os, re, json, time
 from collections import Counter
 
 # Optional libraries
@@ -521,6 +521,26 @@ def parse_json_response(text):
         raise ValueError("Gemini returned an invalid JSON object")
     return parsed
 
+def generate_gemini_content(client, contents, config):
+    """Retry temporary Gemini capacity and rate-limit failures before falling back."""
+    last_error = None
+    for attempt in range(3):
+        try:
+            return client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=contents,
+                config=config,
+            )
+        except Exception as error:
+            last_error = error
+            status = str(getattr(error, "status_code", ""))
+            message = str(error)
+            transient = status in {"429", "500", "503"} or any(code in message for code in ("429", "500", "503"))
+            if not transient or attempt == 2:
+                raise
+            time.sleep(2 ** attempt)
+    raise last_error
+
 def llm_score_gemini(resume_text, jd_text):
     client, error = get_gemini_client()
     if error:
@@ -535,10 +555,10 @@ def llm_score_gemini(resume_text, jd_text):
     )
 
     try:
-        resp = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=user_prompt,
-            config={
+        resp = generate_gemini_content(
+            client,
+            user_prompt,
+            {
                 "temperature": 0.2,
                 "max_output_tokens": 1400,
                 "response_mime_type": "application/json",
@@ -549,14 +569,14 @@ def llm_score_gemini(resume_text, jd_text):
         return {"llm_response": parsed}
     except Exception as first_error:
         try:
-            response = client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=user_prompt + (
+            response = generate_gemini_content(
+                client,
+                user_prompt + (
                     '\nUse exactly this compact JSON shape: '
                     '{"skills":[],"education":"","experience_years":0,"score":0,'
                     '"matched_skills":[],"reasoning":""}. JSON only.'
                 ),
-                config={"temperature": 0.1, "max_output_tokens": 1200},
+                {"temperature": 0.1, "max_output_tokens": 1200},
             )
             return {"llm_response": parse_json_response(response.text)}
         except Exception as retry_error:
@@ -577,10 +597,10 @@ def llm_rewrite_bullets(bullets):
         "Return one rewrite for every input line.\n\n" + numbered
     )
     try:
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-            config={
+        response = generate_gemini_content(
+            client,
+            prompt,
+            {
                 "temperature": 0.3,
                 "max_output_tokens": 700,
                 "response_mime_type": "application/json",
@@ -592,13 +612,13 @@ def llm_rewrite_bullets(bullets):
     except Exception as first_error:
         # Retry without schema enforcement if structured output is rejected.
         try:
-            response = client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt + (
+            response = generate_gemini_content(
+                client,
+                prompt + (
                     "\nReturn JSON only, with exactly this shape: "
                     '{"rewrites":[{"id":1,"rewrite":"text"}]}.'
                 ),
-                config={"temperature": 0.2, "max_output_tokens": 700},
+                {"temperature": 0.2, "max_output_tokens": 700},
             )
             data = parse_json_response(response.text)
             return {item.get("id"): item.get("rewrite", "") for item in data.get("rewrites", [])}, None
