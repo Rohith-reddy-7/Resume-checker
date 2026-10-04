@@ -1,8 +1,7 @@
 streamlit
 pdfplumber
 python-docx
-openai
+google-genai>=1.0.0
 scikit-learn
-sentence-transformers
-pandas
+pandas==2.3.3
 numpy

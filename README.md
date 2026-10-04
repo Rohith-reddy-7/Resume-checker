@@ -1,54 +1,27 @@
-# Automated Resume Relevance Checker
+# Resume Relevance Checker
 
-## Project Overview
-This project evaluates how well a candidate’s resume matches a job description. It has two modes:
+A Streamlit app that compares resumes with job descriptions using transparent local evidence scoring or Gemini 2.5 Flash.
 
-- **Simple Keyword Match** – Extracts keywords from resume and JD, calculates a relevance score, and provides suggestions.
-- **LLM-powered Mode** – Uses OpenAI GPT models to provide structured analysis of skills, education, experience, and overall relevance.
+## Run locally
 
-Users can upload resumes (PDF, DOCX, TXT), paste a job description, and see a relevance score along with matched skills and improvement suggestions.
+```powershell
+$env:GEMINI_API_KEY = "your-gemini-api-key"
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
 
----
+The simple keyword mode works without an API key.
 
-## How to Run Locally
+## Deploy with Streamlit Community Cloud
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/Rohith-reddy-7/Resume-checker
-cd Resume-checker
-## How to Run Locally
+1. Create a GitHub repository and upload `app.py`, `requirements.txt`, `.gitignore`, and this `README.md`.
+2. Open [share.streamlit.io](https://share.streamlit.io) and choose **Create app**.
+3. Select the repository, branch, and set the main file to `app.py`.
+4. In **Advanced settings**, add this secret:
 
-### 1. Install dependencies
-```bash
-pip install -r requirements.txt
+```toml
+GEMINI_API_KEY = "your-gemini-api-key"
+```
 
-##Windows##
+5. Deploy the app.
 
-setx OPENAI_API_KEY "your-api-key"
-
-##Features##
-
-Relevance score (0–100)
-
-Matched skills from resume
-
-Job description keywords extraction
-
-Suggestions to improve resume relevance
-
-Works without API if OpenAI quota is exceeded (Simple mode fallback)
-
-##Notes##
-
-LLM-powered mode uses OpenAI GPT models and requires a valid API key.
-
-OpenAI free trial credits may run out; in that case, the Simple mode ensures full functionality.
-
-**Links**
-
-GitHub Repository: https://github.com/Rohith-reddy-7/Resume-checker
-
-Deployed Web App: [https://resume-checker-8zlv9scgnsohrwsqkammpr.streamlit.app/]
-
-Demo Video: [[YouTube Link]--(https://www.youtube.com/watch?v=Vn_hfGyYlc0)]
-
+Never commit an API key to GitHub. Use Streamlit Cloud secrets or an environment variable.
