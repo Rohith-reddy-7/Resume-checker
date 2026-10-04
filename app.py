@@ -443,7 +443,7 @@ def looks_like_error_log(text):
 # Gemini-powered scoring
 ###########################
 # The app intentionally uses one model so scoring is predictable across runs.
-GEMINI_MODEL = "gemini-2.5-flash"
+GEMINI_MODEL = "gemini-3.8-flash"
 
 # Gemini structured outputs prevent missing
 # fields or prose around the JSON, making the UI output dependable.
@@ -463,7 +463,6 @@ RELEVANCE_RESPONSE_FORMAT = {
                 "reasoning": {"type": "string"},
             },
             "required": ["skills", "education", "experience_years", "score", "matched_skills", "reasoning"],
-            "additionalProperties": False,
         },
     },
 }
@@ -481,12 +480,10 @@ REWRITE_RESPONSE_FORMAT = {
                         "type": "object",
                         "properties": {"id": {"type": "integer"}, "rewrite": {"type": "string"}},
                         "required": ["id", "rewrite"],
-                        "additionalProperties": False,
                     },
                 },
             },
             "required": ["rewrites"],
-            "additionalProperties": False,
         },
     },
 }
@@ -731,7 +728,7 @@ st.markdown(
 st.sidebar.header("Options")
 
 mode = st.sidebar.radio("Scoring mode", ("Simple Keyword Match (No API)", "Gemini-powered (needs API)"))
-st.sidebar.caption("AI model: Gemini 2.5 Flash")
+st.sidebar.caption("AI model: Gemini 3.8 Flash")
 
 col1, col2 = st.columns([1.2, 1])
 with col1:

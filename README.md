@@ -1,6 +1,6 @@
 # Resume Relevance Checker
 
-A Streamlit app that compares resumes with job descriptions using transparent local evidence scoring or Gemini 2.5 Flash.
+A Streamlit app that compares resumes with job descriptions using transparent local evidence scoring or Gemini 3.8 Flash.
 
 ## Run locally
 
